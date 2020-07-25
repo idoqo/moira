@@ -4,6 +4,7 @@ package api
 type Config struct {
 	EnableCORS bool
 	Listen     string
+	ExportRoutes bool
 }
 
 // WebConfig is container for web ui configuration parameters

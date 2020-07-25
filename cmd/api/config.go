@@ -20,8 +20,10 @@ type config struct {
 type apiConfig struct {
 	// Api local network address. Default is ':8081' so api will be available at http://moira.company.com:8081/api.
 	Listen string `yaml:"listen"`
-	// If true, CORS for cross-domain requests will be enabled. This option can be used only for debugging purposes.
+	// If true, CORS for cross-domain requests will be enabled. This option should be used only for debugging purposes.
 	EnableCORS bool `yaml:"enable_cors"`
+	// If true, directs Moira to create a file with all its API routes during initialization
+	ExportRoutes bool `yaml:"export_routes"`
 }
 
 type webConfig struct {
@@ -51,6 +53,7 @@ func (config *apiConfig) getSettings() *api.Config {
 	return &api.Config{
 		Listen:     config.Listen,
 		EnableCORS: config.EnableCORS,
+		ExportRoutes: config.ExportRoutes,
 	}
 }
 
@@ -92,6 +95,7 @@ func getDefault() config {
 		API: apiConfig{
 			Listen:     ":8081",
 			EnableCORS: false,
+			ExportRoutes: false,
 		},
 		Web: webConfig{
 			RemoteAllowed: false,

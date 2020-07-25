@@ -1,13 +1,13 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
+	"github.com/moira-alert/moira/cmd/routesgen"
 	metricSource "github.com/moira-alert/moira/metric_source"
 	"github.com/rs/cors"
+	"net/http"
 
 	"github.com/moira-alert/moira"
 	"github.com/moira-alert/moira/api"
@@ -21,7 +21,8 @@ const contactKey moiramiddle.ContextKey = "contact"
 const subscriptionKey moiramiddle.ContextKey = "subscription"
 
 // NewHandler creates new api handler request uris based on github.com/go-chi/chi
-func NewHandler(db moira.Database, log moira.Logger, index moira.Searcher, config *api.Config, metricSourceProvider *metricSource.SourceProvider, webConfigContent []byte) http.Handler {
+func NewHandler(db moira.Database, log moira.Logger, index moira.Searcher, config *api.Config,
+	metricSourceProvider *metricSource.SourceProvider, webConfigContent []byte) http.Handler {
 	database = db
 	searchIndex = index
 	router := chi.NewRouter()
@@ -46,6 +47,11 @@ func NewHandler(db moira.Database, log moira.Logger, index moira.Searcher, confi
 		router.Route("/notification", notification)
 		router.Route("/health", health)
 	})
+
+	if config.ExportRoutes {
+		routesgen.GenerateRoutes(router)
+	}
+
 	if config.EnableCORS {
 		return cors.AllowAll().Handler(router)
 	}

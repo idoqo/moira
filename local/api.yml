@@ -23,6 +23,7 @@ remote:
 api:
   listen: ":8081"
   enable_cors: false
+  export_routes: true
 web:
   contacts:
     - type: mail
